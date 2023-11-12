@@ -19,5 +19,9 @@ To do that you need to:
 
 You can now copy the code from this repo into your Trading Signals editors.
 
-Do read the [ProfitView Docs](https://profitview.net/docs/trading/) first however.
+*Make sure you understand what the code is doing before you run it*
+
+Make sure you agree with [ProfitView's Terms of Service](https://profitview.net/terms-of-service)
+
+Do also read the [ProfitView Docs](https://profitview.net/docs/trading/) first.
 
