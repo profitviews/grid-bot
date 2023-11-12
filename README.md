@@ -1,6 +1,6 @@
-# ProfitView Grid Bot
-
 <img src="/assets/images/logo.png" style="width:500px"> 
+
+# ProfitView Grid Bot
 
 This repo is a set of Python files to complement the Webinar held by [ProfitView](https://profitview.net) in collaboration with [BitMEX](https://bitmex.com) on 13 November, 2023:
 
