@@ -1,6 +1,6 @@
 <img src="/assets/images/logo.png" style="width:500px"> 
 
-# ProfitView Grid Bot
+# Simple Grid Bot
 
 This repo is a set of Python files to complement the Webinar held by [ProfitView](https://profitview.net) in collaboration with [BitMEX](https://bitmex.com) on 13 November, 2023:
 
@@ -26,4 +26,24 @@ You can now copy the code from this repo into your Trading Signals editors.
 Make sure you agree with [ProfitView's Terms of Service](https://profitview.net/terms-of-service)
 
 Do also read the [ProfitView Docs](https://profitview.net/docs/trading/) first.
+
+## BitMEX/ProfitView Algo Academy
+
+Go to [BitMEX Guilds](https://www.bitmex.com/guilds) and join **Algo Academy**.  Join the [Discord](https://discord.com/invite/2EYZtHUxnX) too.
+
+Have a look at the collaboratively written algos that are emerging in the [Algo Academy](https://github.com/profitviews/bitmex-algo-academy) repo.
+
+## More Events - and Code
+
+Please see [ProfitView Events](https://profitview.net/events) to view recordings of other past events.  Each has a repo.  Here's some relevant ones:
+
+* Python algo workshops [I](https://profitview.net/events/algorithmic-trading-with-python), [II](https://profitview.net/events/algorithmic-trading-with-python-part-2) and [III](https://profitview.net/events/algorithmic-trading-with-python-part-3) - see [Workshops](https://github.com/profitviews/workshops) repo
+* [Python with C++](https://profitview.net/events/cpp-python-algo-trading) - see [Fast Python Backtest](https://github.com/profitviews/fast-python-backtest) repo
+
+## Blogs
+
+See [ProfitView's Blog](https://profitview.net/blog), in particular some Python algo-trading related ones:
+* [Why Python is Better than C++ for Algotrading](https://profitview.net/blog/why-python-is-better-than-cpp-for-algotrading)
+* [Algo Trading with Google Sheets](https://profitview.net/blog/algo-trading-with-google-sheets) - and the [repo](https://github.com/profitviews/botsheet)
+* [C++/Python Programming - a brief history](https://profitview.net/blog/cpp-python-algotrading)
 
