@@ -10,7 +10,7 @@ In order to make the most of it, you may want to create your own algos on the ba
 
 To do that you need to:
 
-1. Get an account with [BitMEX](https://bitmex.com)
+1. Get an account with [BitMEX](https://bitmex.com) and transfer some funds to it ($100 or so will do to start with)
 2. [Sign-up to ProfitView](https://profitview.net/register)
 3. Choose a [Plan](https://profitview.net/app/settings/plans) - you will need at least 'Hobbyist'
 5. Go to ProfitView's [Exchanges settings](https://profitview.net/app/settings/exchanges) and select exchange BitMEX. 
