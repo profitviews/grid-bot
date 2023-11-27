@@ -9,20 +9,34 @@ class Pr:
 	SYMBOL = 'XBTUSD'
 	RUNGS = 5
 	MULT = .8
-	SIZE = 10
-	LIMIT = 20
+	SIZE = 10  # Multiple of lot size
+	LIMIT = 20  # Multiple of lot size
 	
  
 class Venue:
-	def __init__(self, venue, instrument_data):
+	def __init__(self, venue, instrument_data, symbol):
 		self.instruments = instrument_data
+		self.symbol = symbol
 		self.src = self.instruments['src']
 		self.venue_id = self.instruments['venue_id']
 
-	def instrument(self, symbol):
-		instr = [i for i in self.instruments['data'] if i['symbol'] == symbol]
+	@property
+	def instrument(self):
+		instr = [i for i in self.instruments['data'] if i['symbol'] == self.symbol]
 		return instr[0] if instr else None
-
+	
+	@property
+	def tick(self):
+		if i := self.instrument:
+			return float(self.instrument['tickSize'])
+		return None
+						 
+	@property
+	def lot(self):
+		if i := self.instrument:
+			return int(self.instrument['lotSize'])
+		return None
+	
 
 def round_to_tick(price, tick):
 	"""Round `price` to an exact multiple of `tick`"""
@@ -56,13 +70,10 @@ class Trading(Link):
 			'instrument',
 			'public',
 			method='GET', params={})
-		v = Venue(Pr.VENUE, instrument_data)
-		if i := v.instrument(Pr.SYMBOL):
-			self.tick = float(i['tickSize'])
-			self.lot = int(i['lotSize'])
-			return True
-		logger.warning(f"No instrument data for {Pr.SYMBOL} - ending algo")
-		return False
+		v = Venue(Pr.VENUE, instrument_data, Pr.SYMBOL)
+		self.tick = v.tick
+		self.lot = v.lot
+		return self.tick and self.lot
 		
 	def repeated_update(self):
 		"""Run `update_signal(self)` every `interval` seconds
