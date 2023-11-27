@@ -20,12 +20,12 @@ class Venue:
 		self.venue_id = self.instruments['venue_id']
 
 	def instrument(self, symbol):
-		return [i for i in self.instruments['data'] if i['symbol'] == symbol][0]
+		instr = [i for i in self.instruments['data'] if i['symbol'] == symbol]
+		return instr[0] if instr else None
 
 
 def round_to_tick(price, tick):
 	"""Round `price` to an exact multiple of `tick`"""
-	logger.info(f"{price=} {tick=}")
 	return round(price/tick)*tick
 
 	
@@ -41,22 +41,28 @@ class Trading(Link):
 		
     def on_start(self):
 		self.quoted = False
+		
+		# Get parameters specific to this instrument
+		if self.venue_setup():
+			while not self.quoted: time.sleep(1)  # Wait until there's a quote
+			logger.info(f"Starting to repeat")
+			self.repeated_update()
+		else: logger.warning(f"No instrument data for {Pr.SYMBOL} - ending algo")
+
+	def venue_setup(self):
+		# Get parameters specific to this instrument
 		instrument_data = self.call_endpoint(
 			Pr.VENUE,
 			'instrument',
 			'public',
 			method='GET', params={})
-		logger.info(f"Getting venue data for {Pr.VENUE}")
 		v = Venue(Pr.VENUE, instrument_data)
-		logger.info(f"Getting instrument data for {Pr.SYMBOL}")
-		i = v.instrument(Pr.SYMBOL)
-		logger.info("Got instrument data")
-		self.tick = float(i['tickSize'])
-		self.lot = int(i['lotSize'])
-		logger.info("Quoted" if self.quoted else "Not quoted")
-		while not self.quoted: time.sleep(1)  # Wait until there's a quote
-		logger.info(f"Starting to repeat")
-        self.repeated_update()
+		if i := v.instrument(Pr.SYMBOL):
+			self.tick = float(i['tickSize'])
+			self.lot = int(i['lotSize'])
+			return True
+		logger.warning(f"No instrument data for {Pr.SYMBOL} - ending algo")
+		return False
 		
 	def repeated_update(self):
 		"""Run `update_signal(self)` every `interval` seconds
