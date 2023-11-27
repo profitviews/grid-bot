@@ -4,9 +4,9 @@
 
 This repo is a set of Python files to complement the Webinar held by [ProfitView](https://profitview.net) in collaboration with [BitMEX](https://bitmex.com) on 13 November, 2023:
 
-[How to Create Your First Trading Bot in 30 Minutes](https://lu.ma/bot-trading-webinar)
+[How to Create Your First Trading Bot in 30 Minutes](https://profitview.net/events/create-your-first-trading-bot)
 
-Please feel free to watch the webinar recording.
+Please feel free to sign-up to watch the webinar recording.
 
 In order to make the most of it, you may want to create your own algos on the basis of what's here.
 
