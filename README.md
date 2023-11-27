@@ -19,7 +19,7 @@ To do that you need to:
 4. Create [BitMEX API Keys](https://www.bitmex.com/app/apiKeys) - choose `Order` Key Permissions.
 6. Add your BitMEX API Keys in the ProfitView Connect Exchange popup
 
-You can now copy the code from this repo into your Trading Signals editors.
+You can now copy the code from this repo into your Trading Signals editors.  Code is in `src`.  The code from the Webinar is in `src/webinar1`.
 
 *Make sure you understand what the code is doing before you run it*
 
