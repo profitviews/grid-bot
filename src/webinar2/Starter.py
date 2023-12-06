@@ -1,4 +1,4 @@
-from profitview import Link, logger, http
+from profitview import Link, logger
 import threading 
 import time 
 import json
@@ -7,15 +7,16 @@ import builtins
 
 class Pr:
 	"""Constant parameters for the algo"""
-	INTERVAL = 60
+	INTERVAL = 60          # Time (seconds) between limit order resets
 	VENUE = 'BitMEX'
 	SYMBOL = 'XBTUSD'
-	RUNGS = 5
-	MULT = .1
-	BASE_SIZE = 120  # In US$
-	SIZE = 1         # Multiple of BASE_SIZE
-	LIMIT = 3        # Multiple of BASE_SIZE
-	QUOTE_DELAY = 5
+	RUNGS = 5              
+	MULT = .1              # Multiple of base increment to use between grids
+	BASE_SIZE = 120        # In US$: minimum notional value of a contract
+	SIZE = 1               # Multiple of BASE_SIZE
+	LIMIT = 3              # Multiple of BASE_SIZE
+	QUOTE_DELAY = 5        # Time to wait initially for a first bid/ask quote
+	RATE_LIMIT_DELAY = .1  
 
 
 class Trading(Link):
@@ -51,9 +52,9 @@ class Trading(Link):
 		return self.tick and self.lot  # We have a valid tick and lot size for our symbol
 		
 	def repeated_update(self):
-		"""Run `update_signal(self)` every `interval` seconds
+		"""Run `update_signal(self)` every `Pr.INTERVAL` seconds
 		
-		Note: `update_signal(self)` must take less than `interval` seconds
+		Note: `update_signal(self)` must take less than `Pr.INTERVAL` seconds
 		"""
 		try:  # On an exception the repetion will end
 			then = time.time()
@@ -74,21 +75,19 @@ class Trading(Link):
 		
 		net = self.get_net_position()
 		inc = self.get_increment()
-		size = round_to_lot(Pr.SIZE*self.base_size, self.lot)
+		size = round_to(Pr.SIZE*self.base_size, self.lot)
 		limit = Pr.LIMIT*self.base_size
 		
-		# logger.info(f"{net=}, {inc=}, {Pr.SIZE=}, {self.base_size=}, {size=}, {limit=}, {self.ask=}")
-		
-		logger.info(f"{Pr.RUNGS} x {size} {self.symbol} each {round_to_tick(inc, self.tick)} XBT (net {net:.0f})")
+		logger.info(f"{Pr.RUNGS} x {size} {self.symbol} each {round_to(inc, self.tick)} XBT (net {net:.0f})")
 		for rung in range(1, Pr.RUNGS + 1):
-			# If the net position goes too far (`Pr.LIMIT`) one way, don't set orders that side
+			# If the net position goes too far (`limit`) one way, don't set orders that side
 			if net > -limit:
 				self.create_limit_order(Pr.VENUE, self.symbol, side='Sell', size=size, 
 										price=self.rung_price('Sell', rung, inc))
 			if net < limit: 
 				self.create_limit_order(Pr.VENUE, self.symbol, side='Buy', size=size,
 										price=self.rung_price('Buy', rung, inc))
-			time.sleep(.1)  # To avoid rate limits
+			time.sleep(Pr.RATE_LIMIT_DELAY)  # To avoid rate limits
 
 		
 	def definitely_cancel_orders(self):
@@ -130,13 +129,12 @@ class Trading(Link):
 		if side == 'Sell': price = self.ask + rung*increment
 		else: price = self.bid - rung*increment  # side == 'Buy'
 
-		return round_to_tick(price, self.tick)
+		return round_to(price, self.tick)
 
 	
 class Venue:  # TODO: page to get all instruments
-	def __init__(self, src, instruments, venue):
+	def __init__(self, instruments, venue):
 		# Get parameters specific to this instrument
-		self.src = src
 		self.instruments = instruments
 		self.venue = venue
 		self.__current_symbol = None
@@ -211,16 +209,16 @@ class BitMEX(Venue):
 			instrument_count += current_count
 			logger.info(f"{instrument_count=}")
 			if current_count < self.INSTRUMENT_PAGE_SIZE: break
-			time.sleep(.1)  # To avoid rate limits
+			time.sleep(Pr.RATE_LIMIT_DELAY)  # To avoid rate limits
 		
-		super().__init__(instruments['src'], self.__type_parameters(all_instruments_data), self.NAME)
+		super().__init__(self.__type_parameters(all_instruments_data), self.NAME)
 		
 	def standard_size(self, symbol, dollar_amount):
 		d = self._instrument(symbol)
-		m = d['markPrice']
+		mark_price = d['markPrice']
 
-		if d['isInverse']: m = 1/m
-		mm = abs(float(d['multiplier']))*m
+		if d['isInverse']: mark_price = 1/mark_price
+		mark_multiplier = abs(float(d['multiplier']))*mark_price
 		
 		xbtparams = self.trading.call_endpoint(
 			Pr.VENUE,
@@ -230,20 +228,17 @@ class BitMEX(Venue):
 				'symbol': 'XBT', 'columns': 'markPrice'
 		})
 		xbtMark = float(xbtparams['data'][0]['markPrice'])
-		
-		mark = xbtMark/1e8 if d['settlCurrency'] == 'XBt' else 0.000001  # USDt in $
-		minimum_dollar_size = int(d['lotSize'])*mark*mm
+
+		USDt_in_USD = 1e-6  # USDt in $: https://blog.bitmex.com/api_announcement/api-usage-for-usdt-contracts/
+		BTC_in_SATOSHI = 1e8
+		mark = xbtMark/BTC_in_SATOSHI if d['settlCurrency'] == 'XBt' else USDt_in_USD
+		minimum_dollar_size = int(d['lotSize'])*mark*mark_multiplier
 		assert(dollar_amount > minimum_dollar_size)
 		dollar_multiple = dollar_amount//minimum_dollar_size;
 		lot = self.lot(symbol)
-		# logger.info(f"{dollar_amount=}, {minimum_dollar_size=}, {mark=}, {lot=}, {dollar_multiple=}, {lot*dollar_multiple=}")
 		return dollar_multiple*lot
 	
 
-def round_to_tick(price, tick):
-	"""Round `price` to an exact multiple of `tick`"""
-	return round(price/tick)*tick
-
-def round_to_lot(size, lot):
-	"""Round `price` to an exact multiple of `tick`"""
-	return round(size/lot)*lot
+def round_to(value, increment):
+	"""Round `value` to an exact multiple of `increment`"""
+	return round(value/increment)*increment
