@@ -2,11 +2,12 @@
 
 # Grid Bot
 
-This repo is a set of Python files to complement the Webinar held by [ProfitView](https://profitview.net) in collaboration with [BitMEX](https://bitmex.com) on 13 November, 2023:
+This repo is a set of Python files to complement Webinars held by [ProfitView](https://profitview.net) in collaboration with [BitMEX](https://bitmex.com) in 2023:
 
-[How to Create Your First Trading Bot in 30 Minutes](https://profitview.net/events/create-your-first-trading-bot)
+* [How to Create Your First Trading Bot in 30 Minutes](https://profitview.net/events/create-your-first-trading-bot)
+* [Getting Started with Trading Bots](https://lu.ma/algoacademy-webinar)
 
-Please feel free to sign-up to watch the webinar recording.
+Please feel free to sign-up to watch the webinars and recordings.
 
 In order to make the most of it, you may want to create your own algos on the basis of what's here.
 
@@ -19,7 +20,7 @@ To do that you need to:
 4. Create [BitMEX API Keys](https://www.bitmex.com/app/apiKeys) - choose `Order` Key Permissions.
 6. Add your BitMEX API Keys in the ProfitView Connect Exchange popup
 
-You can now copy the code from this repo into your Trading Signals editors.  Code is in `src`.  The code from the Webinar is in `src/webinar1`.
+You can now copy the code from this repo into your Trading Signals editors.  Code is in `src`.  The code from the Webinar is in `src/webinar1` and `src/webinar2`.
 
 *Make sure you understand what the code is doing before you run it*
 
@@ -46,4 +47,3 @@ See [ProfitView's Blog](https://profitview.net/blog), in particular some Python 
 * [Why Python is Better than C++ for Algotrading](https://profitview.net/blog/why-python-is-better-than-cpp-for-algotrading)
 * [Algo Trading with Google Sheets](https://profitview.net/blog/algo-trading-with-google-sheets) - and the [repo](https://github.com/profitviews/botsheet)
 * [C++/Python Programming - a brief history](https://profitview.net/blog/cpp-python-algotrading)
-
