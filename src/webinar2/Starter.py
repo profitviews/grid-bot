@@ -9,7 +9,7 @@ class Pr:
 	"""Constant parameters for the algo"""
 	INTERVAL = 60
 	VENUE = 'BitMEX'
-	SYMBOL = 'ADAUSDT'
+	SYMBOL = 'XBTUSD'
 	RUNGS = 5
 	MULT = .1
 	BASE_SIZE = 120  # In US$
