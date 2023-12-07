@@ -11,11 +11,11 @@ class Pr:
 	VENUE = 'BitMEX'
 	SYMBOL = 'XBTUSD'
 	RUNGS = 5              
-	MULT = .1              # Multiple of base increment to use between grids
-	BASE_SIZE = 120        # In US$: minimum notional value of a contract
+	MULT = 1               # Multiple of base increment to use between grids
+	BASE_SIZE = 120        # In US$: minimum notional value of a contract (rounded down to lot value multiple)
 	SIZE = 1               # Multiple of BASE_SIZE
 	LIMIT = 3              # Multiple of BASE_SIZE
-	QUOTE_DELAY = 5        # Time to wait initially for a first bid/ask quote
+	QUOTE_DELAY = 2        # Time to wait initially for a first bid/ask quote
 	RATE_LIMIT_DELAY = .1  
 
 
