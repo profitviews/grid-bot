@@ -204,7 +204,8 @@ class BitMEX(Venue):
 					'start': instrument_count,
 					'columns': json.dumps([*self.ALGO_PARAMETERS])
 				})
-			all_instruments_data += instruments['data']
+			instruments_data = [i for i in instruments['data'] if i.get('settlCurrency') and i.get('markPrice')]
+			all_instruments_data += instruments_data
 			current_count = len(instruments['data'])
 			instrument_count += current_count
 			logger.info(f"{instrument_count=}")
